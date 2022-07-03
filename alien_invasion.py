@@ -12,8 +12,7 @@ class AlienInvasion:
         self.settings = Settings()
 
         # Set display window size
-        use_fullscreen = False
-        if (use_fullscreen):
+        if (self.settings.use_fullscreen):
             self.screen=pygame.display.set_mode((0,0), pygame.FULLSCREEN)
             self.settings.screen_width = self.screen.get_rect().width
             self.settings.screen_height = self.screen.get_rect().height
@@ -22,7 +21,8 @@ class AlienInvasion:
                 (self.settings.screen_width, self.settings.screen_height)
             )
 
-        pygame.display.set_caption("Alien Invasion")
+        #pygame.display.set_caption("Alien Invasion")
+        pygame.display.set_caption("Posey Invasion")
 
         self.ship = Ship(self)
 
@@ -73,7 +73,6 @@ class AlienInvasion:
             self.ship.moving_left = False
 
         
-
 #
 # MAIN BODY OF PROGRAM
 #
