@@ -15,6 +15,8 @@ class Bullet(Sprite):
         self.rect = pygame.Rect(0,0,self.settings.bullet_width,
             self.settings.bullet_height)
         self.rect.midtop = ai_game.ship.rect.midtop
+        # Make it look like the bullet is coming out of Loki's ear
+        self.rect.x += 15
 
         # Store the bullet's position as a decimal value.
         self.y = float(self.rect.y)
