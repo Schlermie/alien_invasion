@@ -3,7 +3,7 @@ import pygame.font
 class Button:
     """ Create a rectangle with text in it that can be used like a button """
 
-    def __init__(self, ai_game, msg):
+    def __init__(self, ai_game, msg, x, y, width, height):
         """ Initialize button attributes """
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
@@ -15,8 +15,9 @@ class Button:
         self.font = pygame.font.SysFont(None,40)
 
         # Build the button's rect object and center it.
-        self.rect = pygame.Rect(0,0,self.width,self.height)
-        self.rect.center = self.screen_rect.center
+        self.rect = pygame.Rect(0,0,width,height)
+        self.rect.centerx = x
+        self.rect.centery = y
 
         # The button message needs to be prepped only once
         self._prep_msg(msg)

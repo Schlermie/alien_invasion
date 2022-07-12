@@ -5,15 +5,22 @@ class Settings:
         """ Initialize the games settings """
         # Screen settings
         self.use_fullscreen = False
+        self.bg_color = (230,230,230)
         self.screen_width = 1200
         self.screen_height = 800
-        self.bg_color = (230,230,230)
+
+        # Button settings
+        self.button_width = 200
+        self.button_height = 50
 
         # Ship settings
         self.ship_limit = 3
 
         # Bullet settings
-        self.bullet_width = 3
+        self.easy_bullet_width = 20
+        self.medium_bullet_width = 10
+        self.hard_bullet_width = 3
+        self.bullet_width = self.hard_bullet_width
         self.bullet_height = 15
         self.bullet_color = (60,60,60)
         self.bullets_allowed = 3
