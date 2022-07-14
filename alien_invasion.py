@@ -1,3 +1,4 @@
+from fileinput import filename
 import sys
 from time import sleep
 
@@ -211,7 +212,7 @@ class AlienInvasion:
         # Watch for keyboard and mouse events (event loop).
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                sys.exit()
+                self._quit_game()
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
@@ -239,7 +240,6 @@ class AlienInvasion:
             elif hard_button_clicked:
                 self.settings.button_height = self.settings.hard_bullet_width
 
-
     def _start_game(self):
         """ Reset everything to start the game """
         # Reset the game statistics
@@ -260,6 +260,11 @@ class AlienInvasion:
         # Hide the mouse cursor
         pygame.mouse.set_visible(False)
     
+    def _quit_game(self):
+        with open(self.settings.filename, 'w') as f:
+            f.write(str(self.stats.high_score))
+        sys.exit()
+    
     def _check_keydown_events(self, event):
         """ Respond to keypresses. """
         if event.key == pygame.K_RIGHT:
@@ -273,7 +278,7 @@ class AlienInvasion:
         elif event.key == pygame.K_p and not self.stats.game_active:
             self._start_game()
         elif event.key == pygame.K_q:
-            sys.exit()
+            self._quit_game()
 
     def _check_keyup_events(self, event):
         """ Respond to key releases. """

@@ -33,6 +33,9 @@ class Settings:
 
         # How quickly the alien point values increase
         self.score_scale = 1.5
+
+        # High Score filename
+        self.filename = "highscore.txt"
         
         self.initialize_dynamic_settings()
 
