@@ -42,6 +42,16 @@ class AlienInvasion:
 
         self._create_fleet()
 
+        # Load sounds
+        self.pew_sound = pygame.mixer.Sound('sounds/pew.wav')
+        self.woof_sound = pygame.mixer.Sound('sounds/woof.wav')
+        self.hiss_sound = pygame.mixer.Sound('sounds/hiss.wav')
+        self.bye_sound = pygame.mixer.Sound('sounds/bye.wav')
+        self.easy_sound = pygame.mixer.Sound('sounds/easy.wav')
+        self.medium_sound = pygame.mixer.Sound('sounds/medium.wav')
+        self.hard_sound = pygame.mixer.Sound('sounds/hard.wav')
+        self.play_sound = pygame.mixer.Sound('sounds/play.wav')
+        
         # Make the Play button
         self.play_button = Button(self, "Play",
             self.screen.get_rect().centerx,
@@ -83,6 +93,7 @@ class AlienInvasion:
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.aliens, True, True)
         if collisions:
+            pygame.mixer.Sound.play(self.woof_sound)
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
@@ -118,6 +129,7 @@ class AlienInvasion:
 
     def _ship_hit(self):
         """ Respond to the ship being hit by an alien. """
+        pygame.mixer.Sound.play(self.hiss_sound)
         if self.stats.ships_left > 0:
             # Decrement ships_left, and update scoreboard
             self.stats.ships_left -= 1
@@ -129,7 +141,7 @@ class AlienInvasion:
             self._create_fleet()
             self.ship.center_ship()
             # Pause for half a second, so player can see the ship has been hit.
-            sleep(0.5)
+            sleep(1.9)
         else:
             self.stats.game_active = False
             pygame.mouse.set_visible(True)
@@ -237,14 +249,20 @@ class AlienInvasion:
                 self.settings.initialize_dynamic_settings()
                 self._start_game()
             elif easy_button_clicked:
+                pygame.mixer.Sound.play(self.easy_sound)
                 self.settings.bullet_width = self.settings.easy_bullet_width
             elif medium_button_clicked:
+                pygame.mixer.Sound.play(self.medium_sound)
                 self.settings.bullet_width = self.settings.medium_bullet_width
             elif hard_button_clicked:
-                self.settings.button_height = self.settings.hard_bullet_width
+                pygame.mixer.Sound.play(self.hard_sound)
+                self.settings.button_width = self.settings.hard_bullet_width
 
     def _start_game(self):
         """ Reset everything to start the game """
+        # Play the Start Game sound
+        pygame.mixer.Sound.play(self.play_sound)
+        
         # Reset the game statistics
         self.stats.reset_stats()
         self.stats.game_active=True
@@ -262,8 +280,10 @@ class AlienInvasion:
         pygame.mouse.set_visible(False)
     
     def _quit_game(self):
+        pygame.mixer.Sound.play(self.bye_sound)
         with open(self.settings.filename, 'w') as f:
             f.write(str(self.stats.high_score))
+        sleep(0.9)
         sys.exit()
     
     def _check_keydown_events(self, event):
@@ -293,6 +313,7 @@ class AlienInvasion:
     def _fire_bullet(self):
         """ Create a new bullet and add it to the bullets group. """
         if len(self.bullets) < self.settings.bullets_allowed:
+            pygame.mixer.Sound.play(self.pew_sound)
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
 
