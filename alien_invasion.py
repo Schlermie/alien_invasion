@@ -256,7 +256,7 @@ class AlienInvasion:
                 self.settings.bullet_width = self.settings.medium_bullet_width
             elif hard_button_clicked:
                 pygame.mixer.Sound.play(self.hard_sound)
-                self.settings.button_width = self.settings.hard_bullet_width
+                self.settings.bullet_width = self.settings.hard_bullet_width
 
     def _start_game(self):
         """ Reset everything to start the game """
