@@ -57,6 +57,7 @@ class AlienInvasion:
         self.medium_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/medium.wav")
         self.hard_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/hard.wav")
         self.play_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/play.wav")
+        self.inactive_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/inactive.wav")
         
         # Make the Play button
         self.play_button = Button(self, "Play",
@@ -153,6 +154,7 @@ class AlienInvasion:
         else:
             self.stats.game_active = False
             pygame.mixer.Sound.stop(self.play_sound)
+            pygame.mixer.Sound.play(self.inactive_sound, loops=-1)
             pygame.mouse.set_visible(True)
 
     def _check_aliens_bottom(self):
@@ -270,7 +272,9 @@ class AlienInvasion:
     def _start_game(self):
         """ Reset everything to start the game """
         # Play the Play Game sound until game is no longer active
+        # Fadeout the Inactive Game sound
         pygame.mixer.Sound.play(self.play_sound, loops=-1)
+        pygame.mixer.Sound.fadeout(self.inactive_sound, 3000)
         
         # Reset the game statistics
         self.stats.reset_stats()
@@ -289,6 +293,8 @@ class AlienInvasion:
         pygame.mouse.set_visible(False)
     
     def _quit_game(self):
+        pygame.mixer.Sound.stop(self.play_sound)
+        pygame.mixer.Sound.stop(self.inactive_sound)
         pygame.mixer.Sound.play(self.bye_sound)
         with open(self.settings.filename, 'w') as f:
             f.write(str(self.stats.high_score))
@@ -338,7 +344,6 @@ class AlienInvasion:
 
             self._update_screen()
 
-        
 #
 # MAIN BODY OF PROGRAM
 #
@@ -346,4 +351,5 @@ class AlienInvasion:
 if __name__ == '__main__':
     # Make a game instance, and run the game.
     ai=AlienInvasion()
+    pygame.mixer.Sound.play(ai.inactive_sound, loops=-1)
     ai.run_game()
