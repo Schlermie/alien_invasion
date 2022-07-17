@@ -1,6 +1,6 @@
-from fileinput import filename
 import sys
 from time import sleep
+from os import path
 
 import pygame
 
@@ -17,6 +17,12 @@ class AlienInvasion:
 
     def __init__(self):
         """ Initialize the game, and create game resources. """
+        
+        # Set path to runtime directory, based on __file__, because pyinstaller
+        # will change __file__ to the new directory where it builds and runs
+        # the bundle.
+        self.runtime_path = path.dirname(__file__)
+
         pygame.init()
         self.settings = Settings()
 
@@ -43,14 +49,14 @@ class AlienInvasion:
         self._create_fleet()
 
         # Load sounds
-        self.pew_sound = pygame.mixer.Sound('sounds/pew.wav')
-        self.woof_sound = pygame.mixer.Sound('sounds/woof.wav')
-        self.hiss_sound = pygame.mixer.Sound('sounds/hiss.wav')
-        self.bye_sound = pygame.mixer.Sound('sounds/bye.wav')
-        self.easy_sound = pygame.mixer.Sound('sounds/easy.wav')
-        self.medium_sound = pygame.mixer.Sound('sounds/medium.wav')
-        self.hard_sound = pygame.mixer.Sound('sounds/hard.wav')
-        self.play_sound = pygame.mixer.Sound('sounds/play.wav')
+        self.pew_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/pew.wav")
+        self.woof_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/woof.wav")
+        self.hiss_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/hiss.wav")
+        self.bye_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/bye.wav")
+        self.easy_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/easy.wav")
+        self.medium_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/medium.wav")
+        self.hard_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/hard.wav")
+        self.play_sound = pygame.mixer.Sound(f"{self.runtime_path}/sounds/play.wav")
         
         # Make the Play button
         self.play_button = Button(self, "Play",
@@ -129,6 +135,7 @@ class AlienInvasion:
 
     def _ship_hit(self):
         """ Respond to the ship being hit by an alien. """
+        pygame.mixer.Sound.stop(self.play_sound)
         pygame.mixer.Sound.play(self.hiss_sound)
         if self.stats.ships_left > 0:
             # Decrement ships_left, and update scoreboard
@@ -142,8 +149,10 @@ class AlienInvasion:
             self.ship.center_ship()
             # Pause for half a second, so player can see the ship has been hit.
             sleep(1.9)
+            pygame.mixer.Sound.play(self.play_sound, loops=-1)
         else:
             self.stats.game_active = False
+            pygame.mixer.Sound.stop(self.play_sound)
             pygame.mouse.set_visible(True)
 
     def _check_aliens_bottom(self):
@@ -260,8 +269,8 @@ class AlienInvasion:
 
     def _start_game(self):
         """ Reset everything to start the game """
-        # Play the Start Game sound
-        pygame.mixer.Sound.play(self.play_sound)
+        # Play the Play Game sound until game is no longer active
+        pygame.mixer.Sound.play(self.play_sound, loops=-1)
         
         # Reset the game statistics
         self.stats.reset_stats()
